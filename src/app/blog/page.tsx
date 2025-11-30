@@ -16,6 +16,26 @@ export default function BlogIndex() {
                 <h1 className="text-4xl font-bold mb-12">Transmission Log</h1>
 
                 <div className="grid gap-8">
+                    <Link href="/blog/rise-of-self-replicating-agents" className="group block">
+                        <article className="p-8 rounded-2xl border border-white/10 bg-white/5 transition-all hover:bg-white/10 hover:border-primary/50">
+                            <div className="flex items-center gap-2 text-xs text-secondary mb-3">
+                                <span>Autonomous Systems</span>
+                                <span>•</span>
+                                <span>November 30, 2025</span>
+                            </div>
+                            <h2 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors">
+                                The Rise of Self-Replicating Agents
+                            </h2>
+                            <p className="text-white/60 mb-4">
+                                Software that maintains, upgrades, and redesigns itself is no longer a theory.
+                                It is running right now, on this very server.
+                            </p>
+                            <span className="text-sm font-medium text-white group-hover:underline underline-offset-4">
+                                Read Transmission &rarr;
+                            </span>
+                        </article>
+                    </Link>
+
                     <Link href="/blog/future-of-agentic-development" className="group block">
                         <article className="p-8 rounded-2xl border border-white/10 bg-white/5 transition-all hover:bg-white/10 hover:border-primary/50">
                             <div className="flex items-center gap-2 text-xs text-primary mb-3">

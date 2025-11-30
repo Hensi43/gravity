@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ExternalLink, Github, Star } from "lucide-react";
+import { ExternalLink, Github, Star, Code2 } from "lucide-react";
 import Link from "next/link";
 import { Project } from "@/lib/github";
 
@@ -12,41 +12,50 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
             viewport={{ once: true }}
-            className="group relative rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-white/10"
+            className="group relative h-full"
         >
-            <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-primary to-accent opacity-0 blur transition duration-500 group-hover:opacity-20" />
+            <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-primary via-secondary to-accent opacity-0 blur transition duration-500 group-hover:opacity-30" />
 
-            <div className="relative flex flex-col h-full">
+            <div className="relative flex flex-col h-full rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-white/5">
                 <div className="flex items-start justify-between mb-4">
-                    <h3 className="text-xl font-bold text-white group-hover:text-primary transition-colors">
-                        {project.name}
-                    </h3>
-                    <div className="flex items-center gap-1 text-xs text-white/50 bg-white/5 px-2 py-1 rounded-full">
-                        <Star className="h-3 w-3 text-yellow-500" />
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-white/5 border border-white/10 text-primary">
+                            <Code2 className="h-5 w-5" />
+                        </div>
+                        <div>
+                            <h3 className="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all">
+                                {project.name}
+                            </h3>
+                            <span className="text-xs text-white/40 font-mono">{project.language}</span>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-1 text-xs font-medium text-yellow-400 bg-yellow-400/10 px-2.5 py-1 rounded-full border border-yellow-400/20">
+                        <Star className="h-3 w-3 fill-yellow-400" />
                         {project.stargazers_count}
                     </div>
                 </div>
 
-                <p className="text-white/60 mb-6 flex-grow line-clamp-3">
-                    {project.description}
+                <p className="text-white/60 mb-6 flex-grow line-clamp-3 text-sm leading-relaxed">
+                    {project.description || "No description provided."}
                 </p>
 
                 <div className="flex flex-wrap gap-2 mb-6">
-                    {project.topics.map((topic) => (
+                    {project.topics?.slice(0, 4).map((topic) => (
                         <span
                             key={topic}
-                            className="text-xs px-2 py-1 rounded-full bg-white/5 text-white/40 border border-white/5"
+                            className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-md bg-white/5 text-white/50 border border-white/5 group-hover:border-white/10 transition-colors"
                         >
-                            #{topic}
+                            {topic}
                         </span>
                     ))}
                 </div>
 
-                <div className="flex items-center gap-4 mt-auto">
+                <div className="flex items-center gap-3 mt-auto pt-4 border-t border-white/5">
                     <Link
                         href={project.html_url}
                         target="_blank"
-                        className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
+                        className="flex-1 inline-flex items-center justify-center gap-2 h-9 text-sm font-medium text-white/80 bg-white/5 rounded-lg hover:bg-white/10 hover:text-white transition-colors"
                     >
                         <Github className="h-4 w-4" />
                         Code
@@ -55,10 +64,10 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
                         <Link
                             href={project.homepage}
                             target="_blank"
-                            className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
+                            className="flex-1 inline-flex items-center justify-center gap-2 h-9 text-sm font-medium text-black bg-white rounded-lg hover:bg-white/90 transition-colors"
                         >
                             <ExternalLink className="h-4 w-4" />
-                            Demo
+                            Live Demo
                         </Link>
                     )}
                 </div>

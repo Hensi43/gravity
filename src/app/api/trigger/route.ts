@@ -1,39 +1,22 @@
 import { NextResponse } from "next/server";
+import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(request: Request) {
     try {
-        // Determine the base URL. In production, this should be the actual domain.
-        // For local development, we assume localhost:3000 (or the port it's running on).
-        // We use the request URL to get the origin.
-        const url = new URL(request.url);
-        const origin = url.origin;
+        // Generate a unique session ID for this rebuild cycle
+        const sessionId = `rebuild-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
-        // Forward the request to the secure webhook
-        const webhookUrl = `${origin}/api/antigravity-webhook`;
+        console.log(`Control Center Session Created: ${sessionId}`);
 
-        console.log(`Forwarding trigger to: ${webhookUrl}`);
-
-        const response = await fetch(webhookUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                // The secret token required by the webhook
-                "x-secret-token": "gravity2026secret",
-            },
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            return NextResponse.json({ error: `Webhook failed: ${errorText}` }, { status: response.status });
-        }
-
-        const data = await response.json();
-        return NextResponse.json(data, { status: 200 });
+        return NextResponse.json({
+            status: "control-center-ready",
+            session: sessionId
+        }, { status: 200 });
 
     } catch (error) {
-        console.error("Trigger forwarding error:", error);
+        console.error("Trigger error:", error);
         return NextResponse.json(
-            { error: "Internal Server Error during forwarding" },
+            { error: "Internal Server Error" },
             { status: 500 }
         );
     }
