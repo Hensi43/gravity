@@ -1,0 +1,9 @@
+{
+  "framework": "nextjs",
+  "crons": [
+    {
+      "path": "/api/antigravity-webhook",
+      "schedule": "0 3 * * 0"
+    }
+  ]
+}

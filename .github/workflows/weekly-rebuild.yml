@@ -1,0 +1,24 @@
+name: Weekly Autonomous Rebuild
+
+on:
+  schedule:
+    # Runs at 03:00 UTC every Sunday
+    - cron: '0 3 * * 0'
+  workflow_dispatch: # Allows manual triggering from GitHub UI
+
+jobs:
+  wake-up-agent:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Gravity Webhook
+        run: |
+          # Replace 'your-vercel-url.vercel.app' with your actual deployed domain
+          # We use the secret token 'gravity2026secret' as defined in the webhook
+          
+          curl -X POST \
+            -H "x-secret-token: gravity2026secret" \
+            -H "Content-Type: application/json" \
+            --fail \
+            https://your-vercel-url.vercel.app/api/antigravity-webhook
+            
+          echo "✅ Autonomous signal sent."
