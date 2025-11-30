@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Github, Twitter } from "lucide-react";
 import Link from "next/link";
+import { WakeUpButton } from "./WakeUpButton";
 
 export function Hero() {
     return (
@@ -67,10 +68,19 @@ export function Hero() {
                 </motion.div>
 
                 <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
+                    className="mt-12"
+                >
+                    <WakeUpButton />
+                </motion.div>
+
+                <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 1, delay: 1 }}
-                    className="mt-20 flex gap-6 text-white/40"
+                    transition={{ duration: 1, delay: 0.8 }}
+                    className="mt-12 flex gap-6 text-white/40"
                 >
                     <Github className="h-6 w-6 hover:text-white transition-colors cursor-pointer" />
                     <Twitter className="h-6 w-6 hover:text-white transition-colors cursor-pointer" />
