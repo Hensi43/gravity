@@ -41,6 +41,8 @@ export function ControlPanel({ session }: { session: string }) {
         blog: true,
         screenshots: true,
         lighthouse: true,
+        githubTopics: "agentic-ai, nextjs",
+        projectCount: 3
     });
 
     const addLog = (message: string, type: "info" | "success" | "warning" = "info") => {
@@ -62,7 +64,7 @@ export function ControlPanel({ session }: { session: string }) {
 
         const tasks = [
             { msg: "Analyzing current design trends (2026)...", agent: 1, duration: 1500 },
-            { msg: "Fetching latest repositories from GitHub...", agent: 3, duration: 1000 },
+            { msg: `Fetching top ${config.projectCount} repos with topics: [${config.githubTopics}]...`, agent: 3, duration: 1000 },
             { msg: "Generating new Hero 3D assets...", agent: 2, duration: 2000 },
             { msg: "Writing blog post: 'The Rise of Self-Replicating Agents'...", agent: 1, duration: 1500 },
             { msg: "Compiling production build...", agent: 5, duration: 2500 },
@@ -129,21 +131,60 @@ export function ControlPanel({ session }: { session: string }) {
                             Mission Configuration
                         </h2>
                         <div className="space-y-3">
-                            {Object.entries(config).map(([key, value]) => (
-                                <label key={key} className="flex items-center gap-3 cursor-pointer group">
-                                    <div className={`h-5 w-5 rounded border flex items-center justify-center transition-colors ${value ? 'bg-primary border-primary' : 'border-white/30 bg-transparent'}`}>
-                                        {value && <CheckCircle2 className="h-3.5 w-3.5 text-black" />}
+                            {Object.entries(config).map(([key, value]) => {
+                                if (key === 'githubTopics' || key === 'projectCount') return null;
+
+                                return (
+                                    <div key={key} className="flex flex-col gap-2">
+                                        <label className="flex items-center gap-3 cursor-pointer group">
+                                            <div className={`h-5 w-5 rounded border flex items-center justify-center transition-colors ${value ? 'bg-primary border-primary' : 'border-white/30 bg-transparent'}`}>
+                                                {value && <CheckCircle2 className="h-3.5 w-3.5 text-black" />}
+                                            </div>
+                                            <input
+                                                type="checkbox"
+                                                checked={value as boolean}
+                                                onChange={() => setConfig(prev => ({ ...prev, [key]: !value }))}
+                                                className="hidden"
+                                                disabled={status !== 'idle'}
+                                            />
+                                            <span className="text-sm text-white/80 group-hover:text-white capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
+                                        </label>
+
+                                        {/* GitHub Specific Options */}
+                                        {key === 'repos' && value && (
+                                            <motion.div
+                                                initial={{ opacity: 0, height: 0 }}
+                                                animate={{ opacity: 1, height: 'auto' }}
+                                                className="pl-8 flex flex-col gap-3"
+                                            >
+                                                <div>
+                                                    <label className="text-xs text-white/40 mb-1 block">Filter by Topics (comma separated)</label>
+                                                    <input
+                                                        type="text"
+                                                        value={config.githubTopics}
+                                                        onChange={(e) => setConfig(prev => ({ ...prev, githubTopics: e.target.value }))}
+                                                        placeholder="e.g. react, ai, 3d"
+                                                        className="w-full bg-white/5 border border-white/10 rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:border-primary/50"
+                                                        disabled={status !== 'idle'}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs text-white/40 mb-1 block">Project Count</label>
+                                                    <input
+                                                        type="number"
+                                                        min={1}
+                                                        max={6}
+                                                        value={config.projectCount}
+                                                        onChange={(e) => setConfig(prev => ({ ...prev, projectCount: parseInt(e.target.value) }))}
+                                                        className="w-20 bg-white/5 border border-white/10 rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:border-primary/50"
+                                                        disabled={status !== 'idle'}
+                                                    />
+                                                </div>
+                                            </motion.div>
+                                        )}
                                     </div>
-                                    <input
-                                        type="checkbox"
-                                        checked={value}
-                                        onChange={() => setConfig(prev => ({ ...prev, [key as keyof typeof config]: !value }))}
-                                        className="hidden"
-                                        disabled={status !== 'idle'}
-                                    />
-                                    <span className="text-sm text-white/80 group-hover:text-white capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
-                                </label>
-                            ))}
+                                );
+                            })}
                         </div>
 
                         {status === 'idle' && (
