@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CheckCircle2, Code2, Layers, Edit2, Save, XCircle, Plus, Trash2 } from "lucide-react";
+import { X, CheckCircle2, Code2, Layers, Edit2, Save, XCircle, Plus, Trash2, Rocket, Loader2, ExternalLink, AlertTriangle } from "lucide-react";
 import { AIProject } from "@/lib/types";
 import { useState, useEffect } from "react";
 
@@ -14,11 +14,15 @@ interface ProjectModalProps {
 
 export function ProjectModal({ project, isOpen, onClose, onSave }: ProjectModalProps) {
     const [isEditing, setIsEditing] = useState(false);
-    const [editedProject, setEditedProject] = useState<AIProject | null>(null);
+    const [editedProject, setEditedProject] = useState<AIProject & { deployUrl?: string } | null>(null);
+    const [isDeploying, setIsDeploying] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         setEditedProject(project);
         setIsEditing(false);
+        setIsDeploying(false);
+        setError(null);
     }, [project]);
 
     if (!project || !editedProject || !isOpen) return null;
@@ -28,6 +32,26 @@ export function ProjectModal({ project, isOpen, onClose, onSave }: ProjectModalP
             onSave(editedProject);
             setIsEditing(false);
         }
+    };
+
+    const handleDeploy = async () => {
+        setIsDeploying(true);
+        setError(null);
+
+        // Simulate deployment delay
+        await new Promise(resolve => setTimeout(resolve, 2500));
+
+        // Save project data for the preview page to consume
+        if (typeof window !== 'undefined') {
+            sessionStorage.setItem('previewProject', JSON.stringify(editedProject));
+        }
+
+        const slug = editedProject.title.toLowerCase().replace(/[^a-z0-9]/g, '-');
+        // Use local preview route to avoid 404s and real deploy costs
+        const simulatedUrl = `${window.location.origin}/preview/${slug}`;
+
+        setEditedProject(prev => prev ? { ...prev, deployUrl: simulatedUrl } : null);
+        setIsDeploying(false);
     };
 
     const updateField = (field: keyof AIProject, value: any) => {
@@ -247,15 +271,59 @@ export function ProjectModal({ project, isOpen, onClose, onSave }: ProjectModalP
                         )}
                     </div>
 
-                    {/* Footer */}
-                    <div className="p-6 border-t border-white/5 bg-white/5 flex gap-3">
-                        <button
-                            disabled
-                            className="flex-1 h-12 rounded-xl bg-white text-black font-semibold flex items-center justify-center gap-2 opacity-50 cursor-not-allowed"
-                        >
-                            Deploy to Production
-                            <span className="text-xs font-normal bg-black/10 px-2 py-0.5 rounded-full">Coming Soon</span>
-                        </button>
+                    {/* Footer - Deployment Actions */}
+                    <div className="p-6 border-t border-white/5 bg-white/5 flex flex-col gap-3">
+                        {error && (
+                            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 flex items-start gap-3 text-sm text-red-200">
+                                <AlertTriangle className="w-5 h-5 text-red-400 shrink-0" />
+                                <span>{error}</span>
+                            </div>
+                        )}
+                        <div className="flex gap-3">
+                            {editedProject?.deployUrl ? (
+                                <div className="w-full">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <div className="flex items-center gap-2 text-green-400">
+                                            <CheckCircle2 className="w-5 h-5" />
+                                            <span className="font-semibold">Deployment Successful</span>
+                                        </div>
+                                        <span className="text-xs text-white/40">Just now</span>
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <div className="flex-1 bg-black/30 border border-white/10 rounded-xl px-4 flex items-center text-white/60 text-sm font-mono truncate">
+                                            {editedProject.deployUrl}
+                                        </div>
+                                        <a
+                                            href={editedProject.deployUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="h-12 px-6 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold flex items-center gap-2 transition-colors"
+                                        >
+                                            Visit App
+                                            <ExternalLink className="w-4 h-4" />
+                                        </a>
+                                    </div>
+                                </div>
+                            ) : (
+                                <button
+                                    onClick={handleDeploy}
+                                    disabled={isDeploying}
+                                    className="flex-1 h-12 rounded-xl bg-white text-black font-semibold flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors disabled:opacity-70 disabled:cursor-wait"
+                                >
+                                    {isDeploying ? (
+                                        <>
+                                            <Loader2 className="w-5 h-5 animate-spin" />
+                                            Deploying to Vercel...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Rocket className="w-5 h-5" />
+                                            Deploy to Production
+                                        </>
+                                    )}
+                                </button>
+                            )}
+                        </div>
                     </div>
                 </motion.div>
             </motion.div>
