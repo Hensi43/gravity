@@ -1,6 +1,17 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gravity 🌌
 
-## Features (Real)
+**Gravity** is an intelligent "Idea-to-App" generator. It turns simple text descriptions into fully detailed, deployable Next.js implementation blueprints with a single click.
+
+![Gravity Preview](public/gravity_preview.png)
+
+## 🚀 Features
+
+- **AI-Powered Blueprints**: Generates tech stacks, implementation steps, and time estimates.
+- **High-Fidelity Simulation**: Instantly previews a "live" version of your generated app concept.
+- **Smart Themes**: Automatically applies one of 4 distinct visual themes (Midnight, Solar, Cyber, Swiss) to your project.
+- **One-Click "Deploy"**: Simulates a production deployment pipeline with zero configuration.
+
+## 🛠️ Tech Stack
 
 - 🧠 **Autonomous AI Architect**: Powered by Google Gemini 1.5 Flash to generate project plans instantly.
 - 🌌 **Live Ecosystem**: Fetches real-time repository data from GitHub.
