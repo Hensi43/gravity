@@ -24,6 +24,10 @@ export function WakeUpModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
     const [isFinished, setIsFinished] = useState(false);
 
     useEffect(() => {
+        const updateStatus = (id: string, status: ProjectStatus) => {
+            setProjects(prev => prev.map(p => p.id === id ? { ...p, status } : p));
+        };
+
         if (isOpen && !isFinished) {
             // Simulate build process
             const timeouts: NodeJS.Timeout[] = [];
@@ -53,10 +57,6 @@ export function WakeUpModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
             return () => timeouts.forEach(clearTimeout);
         }
     }, [isOpen, isFinished]);
-
-    const updateStatus = (id: string, status: ProjectStatus) => {
-        setProjects(prev => prev.map(p => p.id === id ? { ...p, status } : p));
-    };
 
     if (!isOpen) return null;
 

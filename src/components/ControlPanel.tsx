@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Terminal, Play, Upload, Github, ExternalLink, Battery, Wifi } from "lucide-react";
+import { Terminal, Upload, Github, ExternalLink, Battery, Wifi } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
